@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Complete com as Vogais</title>
+
+<style>
+body{
+  font-family: Arial;
+  text-align:center;
+  background: linear-gradient(to right, #c2e9fb, #a1c4fd);
+  margin-top:40px;
+}
+
+h1{
+  color:#1d3557;
+}
+
+.palavra{
+  font-size:40px;
+  letter-spacing:15px;
+  margin:30px;
+}
+
+.espaco{
+  display:inline-block;
+  width:50px;
+  height:50px;
+  border:3px dashed #1d3557;
+  vertical-align:middle;
+}
+
+.vogais{
+  margin-top:30px;
+}
+
+.vogal{
+  display:inline-block;
+  padding:15px 20px;
+  margin:10px;
+  font-size:25px;
+  background:#457b9d;
+  color:white;
+  border-radius:10px;
+  cursor:grab;
+}
+
+#resultado{
+  font-size:22px;
+  margin-top:20px;
+  font-weight:bold;
+}
+
+#pontos{
+  margin-top:10px;
+  font-size:18px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎯 Arraste as Vogais</h1>
+<p>Complete a palavra corretamente:</p>
+
+<div id="palavra" class="palavra"></div>
+
+<div class="vogais">
+  <div class="vogal" draggable="true" ondragstart="drag(event)" id="A">A</div>
+  <div class="vogal" draggable="true" ondragstart="drag(event)" id="E">E</div>
+  <div class="vogal" draggable="true" ondragstart="drag(event)" id="I">I</div>
+  <div class="vogal" draggable="true" ondragstart="drag(event)" id="O">O</div>
+  <div class="vogal" draggable="true" ondragstart="drag(event)" id="U">U</div>
+</div>
+
+<p id="resultado"></p>
+<p id="pontos">Pontos: 0</p>
+
+<script>
+
+let palavras = [
+  "CASA","BOLA","MESA","SAPO","LOBO",
+  "GATO","PATO","DADO","FADA","VACA",
+  "FITA","RATO","LATA","BICO","LIVRO"
+];
+
+let palavraAtual = "";
+let vogaisCorretas = [];
+let acertos = 0;
+let pontos = 0;
+
+function novaPalavra(){
+
+  acertos = 0;
+  document.getElementById("resultado").innerHTML = "";
+
+  palavraAtual = palavras[Math.floor(Math.random()*palavras.length)];
+
+  let exibicao = "";
+
+  vogaisCorretas = [];
+
+  for(let i=0; i<palavraAtual.length; i++){
+    let letra = palavraAtual[i];
+
+    if("AEIOU".includes(letra)){
+      exibicao += `<div class="espaco" ondrop="drop(event,'${letra}')" ondragover="allowDrop(event)"></div>`;
+      vogaisCorretas.push(letra);
+    }else{
+      exibicao += letra + " ";
+    }
+  }
+
+  document.getElementById("palavra").innerHTML = exibicao;
+}
+
+function allowDrop(ev){
+  ev.preventDefault();
+}
+
+function drag(ev){
+  ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev, correta){
+  ev.preventDefault();
+  let data = ev.dataTransfer.getData("text");
+
+  if(data === correta){
+    ev.target.innerHTML = data;
+    ev.target.style.border = "3px solid green";
+    acertos++;
+
+    if(acertos === vogaisCorretas.length){
+      pontos += 10;
+      document.getElementById("resultado").innerHTML =
+        "✅ Muito bem! Palavra correta: " + palavraAtual;
+      document.getElementById("pontos").innerHTML =
+        "Pontos: " + pontos;
+
+      setTimeout(novaPalavra, 1500);
+    }
+
+  } else{
+    document.getElementById("resultado").innerHTML =
+      "❌ Vogal incorreta. Tente novamente!";
+  }
+}
+
+novaPalavra();
+
+</script>
+
+</body>
+</html>
