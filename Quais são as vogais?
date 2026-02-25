@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Criando Palavras - Vogais</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: linear-gradient(to right, #fbc2eb, #a6c1ee);
+      margin-top: 50px;
+    }
+
+    h1 {
+      color: #3a0ca3;
+    }
+
+    .botao {
+      padding: 15px 25px;
+      font-size: 22px;
+      margin: 10px;
+      border: none;
+      border-radius: 12px;
+      background-color: #7209b7;
+      color: white;
+      cursor: pointer;
+    }
+
+    .botao:hover {
+      background-color: #560bad;
+    }
+
+    #resultado {
+      font-size: 22px;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    #pontos {
+      font-size: 18px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>🎯 Complete com as Vogais</h1>
+  <p>Escolha a vogal correta para completar a palavra:</p>
+
+  <h2>C _ S _</h2>
+
+  <button class="botao" onclick="verificar('A')">A</button>
+  <button class="botao" onclick="verificar('E')">E</button>
+  <button class="botao" onclick="verificar('I')">I</button>
+  <button class="botao" onclick="verificar('O')">O</button>
+  <button class="botao" onclick="verificar('U')">U</button>
+
+  <p id="resultado"></p>
+  <p id="pontos">Pontos: 0</p>
+
+  <script>
+    let pontos = 0;
+    let etapa = 1;
+
+    function verificar(vogal) {
+
+      if (etapa === 1 && vogal === 'A') {
+        document.querySelector("h2").innerHTML = "C A S _";
+        etapa = 2;
+      } 
+      else if (etapa === 2 && vogal === 'A') {
+        document.querySelector("h2").innerHTML = "CASA";
+        document.getElementById("resultado").innerHTML = "✅ Muito bem! Você completou CASA!";
+        pontos += 10;
+        document.getElementById("pontos").innerHTML = "Pontos: " + pontos;
+        etapa = 3;
+      } 
+      else {
+        document.getElementById("resultado").innerHTML = "❌ Tente novamente!";
+      }
+    }
+  </script>
+
+</body>
+</html>
