@@ -1,190 +1,129 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Vogais no Céu</title>
+<title>Missão das Palavras</title>
 
 <style>
-body{
-  margin:0;
+body {
+  margin: 0;
   font-family: Arial, sans-serif;
-  text-align:center;
-  background: linear-gradient(to bottom, #87CEEB, #E0F6FF);
-  overflow-x:hidden;
+  text-align: center;
+  background: linear-gradient(to bottom, #87CEEB, #E0F7FF);
 }
 
-h1{
-  margin-top:20px;
-  color:#003049;
+h1 {
+  color: white;
+  margin-top: 20px;
+  text-shadow: 2px 2px 4px #00000050;
 }
 
-#palavra{
-  font-size:42px;
-  letter-spacing:15px;
-  margin:40px;
+#pontuacao {
+  font-size: 20px;
+  color: white;
+  margin-bottom: 20px;
 }
 
-.espaco{
-  display:inline-block;
-  width:55px;
-  height:55px;
-  border:3px dashed #003049;
-  vertical-align:middle;
-  background:white;
+#palavra {
+  font-size: 40px;
+  letter-spacing: 15px;
+  margin: 30px;
+  color: #333;
 }
 
-.nuvens{
-  margin-top:40px;
+.vogais {
+  margin-top: 30px;
 }
 
-.nuvem{
-  display:inline-block;
-  width:100px;
-  height:60px;
-  background:white;
-  border-radius:50px;
-  margin:15px;
-  position:relative;
-  cursor:grab;
-  box-shadow:0 5px 10px rgba(0,0,0,0.2);
+.vogal {
+  display: inline-block;
+  width: 70px;
+  height: 70px;
+  line-height: 70px;
+  margin: 10px;
+  font-size: 30px;
+  font-weight: bold;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: transform 0.2s;
 }
 
-.nuvem:before,
-.nuvem:after{
-  content:"";
-  position:absolute;
-  background:white;
-  width:60px;
-  height:60px;
-  border-radius:50%;
-  top:-30px;
+.vogal:hover {
+  transform: scale(1.2);
+  background: #fffacd;
 }
 
-.nuvem:before{ left:10px; }
-.nuvem:after{ right:10px; }
-
-.letra{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -50%);
-  font-size:28px;
-  font-weight:bold;
-  color:#003049;
-}
-
-#resultado{
-  font-size:22px;
-  margin-top:20px;
-  font-weight:bold;
-}
-
-#pontos{
-  font-size:18px;
-  margin-top:10px;
+#mensagem {
+  font-size: 22px;
+  margin-top: 20px;
+  font-weight: bold;
 }
 </style>
 </head>
 
 <body>
 
-<h1>☁️ Complete com as Vogais ☁️</h1>
+<h1>Missão das Palavras</h1>
+<div id="pontuacao">Pontos: 0</div>
 
 <div id="palavra"></div>
 
-<div class="nuvens" id="vogaisContainer"></div>
+<div class="vogais">
+  <div class="vogal" onclick="escolherVogal('A')">A</div>
+  <div class="vogal" onclick="escolherVogal('E')">E</div>
+  <div class="vogal" onclick="escolherVogal('I')">I</div>
+  <div class="vogal" onclick="escolherVogal('O')">O</div>
+  <div class="vogal" onclick="escolherVogal('U')">U</div>
+</div>
 
-<p id="resultado"></p>
-<p id="pontos">Pontos: 0</p>
+<div id="mensagem"></div>
 
 <script>
 
-let palavras = [
-  "CASA","BOLA","MESA","SAPO","LOBO",
-  "GATO","PATO","DADO","FADA","VACA",
-  "FITA","RATO","LATA","BICO","LIVRO"
+const palavras = [
+  "CASA","BOLA","MESA","SAPO",
+  "LOBO","GATO","PATO","DADO",
+  "FADA","VACA","FITA","RATO",
+  "LATA","BICO","LIVRO"
 ];
 
 let palavraAtual = "";
-let vogaisCorretas = [];
-let acertos = 0;
+let palavraOculta = "";
 let pontos = 0;
 
-function novaPalavra(){
+function novaPalavra() {
+  palavraAtual = palavras[Math.floor(Math.random() * palavras.length)];
+  palavraOculta = palavraAtual.replace(/[AEIOU]/g, "_");
+  document.getElementById("palavra").innerText = palavraOculta;
+  document.getElementById("mensagem").innerText = "";
+}
 
-  acertos = 0;
-  document.getElementById("resultado").innerHTML = "";
+function escolherVogal(vogal) {
+  let nova = "";
 
-  palavraAtual = palavras[Math.floor(Math.random()*palavras.length)];
-
-  let exibicao = "";
-  vogaisCorretas = [];
-
-  for(let i=0;i<palavraAtual.length;i++){
-    let letra = palavraAtual[i];
-
-    if("AEIOU".includes(letra)){
-      exibicao += `<div class="espaco" 
-      ondrop="drop(event,'${letra}')" 
-      ondragover="allowDrop(event)"></div>`;
-      vogaisCorretas.push(letra);
-    }else{
-      exibicao += letra + " ";
+  for (let i = 0; i < palavraAtual.length; i++) {
+    if (palavraAtual[i] === vogal) {
+      nova += vogal;
+    } else if (palavraOculta[i] !== "_") {
+      nova += palavraOculta[i];
+    } else {
+      nova += "_";
     }
   }
 
-  document.getElementById("palavra").innerHTML = exibicao;
-}
+  palavraOculta = nova;
+  document.getElementById("palavra").innerText = palavraOculta;
 
-function criarVogais(){
-  let container = document.getElementById("vogaisContainer");
-  container.innerHTML = "";
-
-  let vogais = ["A","E","I","O","U"];
-
-  vogais.forEach(v => {
-    container.innerHTML += `
-      <div class="nuvem" draggable="true" 
-      ondragstart="drag(event)" id="${v}">
-        <div class="letra">${v}</div>
-      </div>`;
-  });
-}
-
-function allowDrop(ev){
-  ev.preventDefault();
-}
-
-function drag(ev){
-  ev.dataTransfer.setData("text", ev.target.id);
-}
-
-function drop(ev, correta){
-  ev.preventDefault();
-  let data = ev.dataTransfer.getData("text");
-
-  if(data === correta){
-    ev.target.innerHTML = data;
-    ev.target.style.border = "3px solid green";
-    acertos++;
-
-    if(acertos === vogaisCorretas.length){
-      pontos += 10;
-      document.getElementById("resultado").innerHTML =
-      "✅ Muito bem! Palavra correta: " + palavraAtual;
-      document.getElementById("pontos").innerHTML =
-      "Pontos: " + pontos;
-
-      setTimeout(novaPalavra,1500);
-    }
-
-  }else{
-    document.getElementById("resultado").innerHTML =
-    "❌ Vogal incorreta. Tente novamente!";
+  if (palavraOculta === palavraAtual) {
+    pontos += 10;
+    document.getElementById("pontuacao").innerText = "Pontos: " + pontos;
+    document.getElementById("mensagem").innerText = "🎉 Parabéns!";
+    setTimeout(novaPalavra, 1500);
   }
 }
 
-criarVogais();
 novaPalavra();
 
 </script>
