@@ -2,47 +2,75 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Complete com as Vogais</title>
+<title>Vogais no Céu</title>
 
 <style>
 body{
-  font-family: Arial;
+  margin:0;
+  font-family: Arial, sans-serif;
   text-align:center;
-  background: linear-gradient(to right, #c2e9fb, #a1c4fd);
-  margin-top:40px;
+  background: linear-gradient(to bottom, #87CEEB, #E0F6FF);
+  overflow-x:hidden;
 }
 
 h1{
-  color:#1d3557;
+  margin-top:20px;
+  color:#003049;
 }
 
-.palavra{
-  font-size:40px;
+#palavra{
+  font-size:42px;
   letter-spacing:15px;
-  margin:30px;
+  margin:40px;
 }
 
 .espaco{
   display:inline-block;
-  width:50px;
-  height:50px;
-  border:3px dashed #1d3557;
+  width:55px;
+  height:55px;
+  border:3px dashed #003049;
   vertical-align:middle;
+  background:white;
 }
 
-.vogais{
-  margin-top:30px;
+.nuvens{
+  margin-top:40px;
 }
 
-.vogal{
+.nuvem{
   display:inline-block;
-  padding:15px 20px;
-  margin:10px;
-  font-size:25px;
-  background:#457b9d;
-  color:white;
-  border-radius:10px;
+  width:100px;
+  height:60px;
+  background:white;
+  border-radius:50px;
+  margin:15px;
+  position:relative;
   cursor:grab;
+  box-shadow:0 5px 10px rgba(0,0,0,0.2);
+}
+
+.nuvem:before,
+.nuvem:after{
+  content:"";
+  position:absolute;
+  background:white;
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  top:-30px;
+}
+
+.nuvem:before{ left:10px; }
+.nuvem:after{ right:10px; }
+
+.letra{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  font-size:28px;
+  font-weight:bold;
+  color:#003049;
 }
 
 #resultado{
@@ -52,26 +80,19 @@ h1{
 }
 
 #pontos{
-  margin-top:10px;
   font-size:18px;
+  margin-top:10px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🎯 Arraste as Vogais</h1>
-<p>Complete a palavra corretamente:</p>
+<h1>☁️ Complete com as Vogais ☁️</h1>
 
-<div id="palavra" class="palavra"></div>
+<div id="palavra"></div>
 
-<div class="vogais">
-  <div class="vogal" draggable="true" ondragstart="drag(event)" id="A">A</div>
-  <div class="vogal" draggable="true" ondragstart="drag(event)" id="E">E</div>
-  <div class="vogal" draggable="true" ondragstart="drag(event)" id="I">I</div>
-  <div class="vogal" draggable="true" ondragstart="drag(event)" id="O">O</div>
-  <div class="vogal" draggable="true" ondragstart="drag(event)" id="U">U</div>
-</div>
+<div class="nuvens" id="vogaisContainer"></div>
 
 <p id="resultado"></p>
 <p id="pontos">Pontos: 0</p>
@@ -97,14 +118,15 @@ function novaPalavra(){
   palavraAtual = palavras[Math.floor(Math.random()*palavras.length)];
 
   let exibicao = "";
-
   vogaisCorretas = [];
 
-  for(let i=0; i<palavraAtual.length; i++){
+  for(let i=0;i<palavraAtual.length;i++){
     let letra = palavraAtual[i];
 
     if("AEIOU".includes(letra)){
-      exibicao += `<div class="espaco" ondrop="drop(event,'${letra}')" ondragover="allowDrop(event)"></div>`;
+      exibicao += `<div class="espaco" 
+      ondrop="drop(event,'${letra}')" 
+      ondragover="allowDrop(event)"></div>`;
       vogaisCorretas.push(letra);
     }else{
       exibicao += letra + " ";
@@ -112,6 +134,21 @@ function novaPalavra(){
   }
 
   document.getElementById("palavra").innerHTML = exibicao;
+}
+
+function criarVogais(){
+  let container = document.getElementById("vogaisContainer");
+  container.innerHTML = "";
+
+  let vogais = ["A","E","I","O","U"];
+
+  vogais.forEach(v => {
+    container.innerHTML += `
+      <div class="nuvem" draggable="true" 
+      ondragstart="drag(event)" id="${v}">
+        <div class="letra">${v}</div>
+      </div>`;
+  });
 }
 
 function allowDrop(ev){
@@ -134,19 +171,20 @@ function drop(ev, correta){
     if(acertos === vogaisCorretas.length){
       pontos += 10;
       document.getElementById("resultado").innerHTML =
-        "✅ Muito bem! Palavra correta: " + palavraAtual;
+      "✅ Muito bem! Palavra correta: " + palavraAtual;
       document.getElementById("pontos").innerHTML =
-        "Pontos: " + pontos;
+      "Pontos: " + pontos;
 
-      setTimeout(novaPalavra, 1500);
+      setTimeout(novaPalavra,1500);
     }
 
-  } else{
+  }else{
     document.getElementById("resultado").innerHTML =
-      "❌ Vogal incorreta. Tente novamente!";
+    "❌ Vogal incorreta. Tente novamente!";
   }
 }
 
+criarVogais();
 novaPalavra();
 
 </script>
